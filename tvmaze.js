@@ -50,7 +50,7 @@ function populateShows(shows) {
              <img class="card-img-top" src="${showImage}">
              <h5 class="card-title">${show.show.name}</h5>
              <p class="card-text">${show.show.summary}</p>
-             <button type="button" class="btn btn-outline-info" id="epBtn">Episodes</button>
+             <button type="button" class="btn btn-outline-info epButton">Episodes</button>
            </div>
          </div>
        </div>
@@ -69,14 +69,16 @@ function populateShows(shows) {
 $("#search-form").on("submit", async function handleSearch(evt) {
   evt.preventDefault();
 
+  let input = document.querySelector('input');
   let query = $("#search-query").val();
   if (!query) return;
 
-  // $("#episodes-area").hide();
+  $("#episodes-area").hide();
 
   let shows = await searchShows(query);
-
   populateShows(shows);
+
+  input.value = '';
 });
 
 /** Given a show ID, return list of episodes:
@@ -90,9 +92,7 @@ async function getEpisodes(id) {
   // TODO: return array-of-episode-info, as described in docstring above
  const response = await axios.get(`http://api.tvmaze.com/shows/${id}/episodes`)
  const allEpisodes = response.data;
- console.log(allEpisodes);
  return allEpisodes;
- 
 }
 
 function populateEpisodes(allEps) {
@@ -100,13 +100,20 @@ function populateEpisodes(allEps) {
   
   for (let episode of allEps) {
     let $episode = $(
-      `<list>${episode.name}(season ${episode.season}, number ${episode.number})</list>`
+      `<list class="list-group-item">${episode.name}(season ${episode.season}, number ${episode.number})</list>`
     );
 
     $episodeList.append($episode);
   }
 }
 
-$("#episodes-list").on("click", "#epBtn", function(evt) {
-  alert('hello')
+$("#shows-list").on("click", ".epButton", async function(evt) {
+  $("#episodes-area").show();
+  
+  let parentOfParentEleOfEpBtn = evt.target.parentElement.parentElement;
+  let id = parentOfParentEleOfEpBtn.dataset.showId
+  
+
+  let friends = await getEpisodes(id);
+  populateEpisodes(friends);
 });
