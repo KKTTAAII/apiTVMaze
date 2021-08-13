@@ -97,6 +97,7 @@ async function getEpisodes(id) {
 
 function populateEpisodes(allEps) {
   const $episodeList = $("#episodes-list");
+  $episodeList.empty();
   
   for (let episode of allEps) {
     let $episode = $(
@@ -116,4 +117,6 @@ $("#shows-list").on("click", ".epButton", async function(evt) {
 
   let friends = await getEpisodes(id);
   populateEpisodes(friends);
+
+
 });
