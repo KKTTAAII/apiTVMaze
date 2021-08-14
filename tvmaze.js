@@ -116,6 +116,6 @@ $("#shows-list").on("click", ".epButton", async function (evt) {
   let parentOfParentEleOfEpBtn = evt.target.parentElement.parentElement;
   let id = parentOfParentEleOfEpBtn.dataset.showId;
 
-  let friends = await getEpisodes(id);
-  populateEpisodes(friends);
+  let episodes = await getEpisodes(id);
+  populateEpisodes(episodes);
 });
